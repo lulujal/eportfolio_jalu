@@ -1,0 +1,58 @@
+/* Custom Styling for E-Portofolio Calon Guru */
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Active navigation link styling */
+.nav-link.active {
+  color: #0369a1 !important;
+  background-color: #f0f7ff !important;
+  font-weight: 700;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.mobile-nav-link.active {
+  color: #0369a1 !important;
+  background-color: #f0f7ff !important;
+  font-weight: 700;
+  border-left: 4px solid #0284c7;
+}
+
+/* Academic card gradient and border touches */
+.academic-card {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.academic-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -8px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+}
+
+/* Print friendly stylesheet */
+@media print {
+  header, footer, #mobile-menu-btn, .no-print, button {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .academic-card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    break-inside: avoid;
+  }
+}

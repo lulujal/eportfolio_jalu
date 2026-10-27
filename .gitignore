@@ -1,0 +1,23 @@
+# Dependensi Node
+node_modules/
+package-lock.json
+
+# Environment Variables (Rahasia)
+.env
+.env.local
+.env.*.local
+
+# Folder Backup Lokal (agar repo tidak berat)
+data/backups/
+
+# Vercel Cache
+.vercel/
+
+# Log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Sistem Operasi
+.DS_Store
+Thumbs.db
