@@ -1,12 +1,23 @@
 const fs = require('fs');
 const path = require('path');
 
-const BACKUP_DIR = path.join(__dirname, '..', 'data', 'backups');
-const SQLITE_FILE = path.join(__dirname, '..', 'data', 'eportfolio.sqlite');
+// Di Vercel Serverless, /var/task adalah read-only. Semua tulis harus ke /tmp.
+const IS_VERCEL = !!process.env.VERCEL;
+const BACKUP_DIR = IS_VERCEL
+  ? path.join('/tmp', 'backups')
+  : path.join(__dirname, '..', 'data', 'backups');
+const SQLITE_FILE = IS_VERCEL
+  ? path.join('/tmp', 'eportfolio.sqlite')
+  : path.join(__dirname, '..', 'data', 'eportfolio.sqlite');
 
 function ensureBackupDir() {
-  if (!fs.existsSync(BACKUP_DIR)) {
-    fs.mkdirSync(BACKUP_DIR, { recursive: true });
+  // Di Vercel, lewati jika directory tidak bisa dibuat (filesystem read-only di /var/task)
+  try {
+    if (!fs.existsSync(BACKUP_DIR)) {
+      fs.mkdirSync(BACKUP_DIR, { recursive: true });
+    }
+  } catch (err) {
+    console.warn('[Backup] Tidak dapat membuat direktori backup:', err.message);
   }
 }
 

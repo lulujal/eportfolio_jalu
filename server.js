@@ -4,28 +4,39 @@ const cors = require('cors');
 const fs = require('fs');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
+const IS_VERCEL = !!process.env.VERCEL;
+
 const { sequelize, dialect, Profile } = require('./models');
 const apiRoutes = require('./routes/api');
 const seedDatabase = require('./seeders/seedData');
-const { ensureBackupDir, createAutoBackup } = require('./utils/backupManager');
+
+let createAutoBackup;
+if (!IS_VERCEL) {
+  const bm = require('./utils/backupManager');
+  createAutoBackup = bm.createAutoBackup;
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Pastikan direktori data ada jika menggunakan sqlite
-if (dialect === 'sqlite') {
+// Pastikan direktori data ada jika menggunakan sqlite (hanya lokal)
+if (!IS_VERCEL && dialect === 'sqlite') {
   const dataDir = path.join(__dirname, 'data');
   if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
   }
 }
 
-// Pastikan direktori uploads untuk dokumen PDF dan direktori backup ada
-const uploadDir = path.join(__dirname, 'public', 'uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+// Pastikan direktori uploads untuk dokumen PDF ada (hanya di env lokal)
+if (!IS_VERCEL) {
+  const uploadDir = path.join(__dirname, 'public', 'uploads');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+  // Siapkan direktori backup
+  const { ensureBackupDir } = require('./utils/backupManager');
+  ensureBackupDir();
 }
-ensureBackupDir();
 
 // Middleware
 app.use(cors());
